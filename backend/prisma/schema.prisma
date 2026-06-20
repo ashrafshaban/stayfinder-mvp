@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Hotel {
+  id              String          @id @default(uuid())
+  name            String
+  city            String
+  country         String
+  description     String
+  stars           Int
+  rating          Float
+  pricePerNight   Float
+  imageUrl        String
+  latitude        Float
+  longitude       Float
+  affiliateUrl    String
+  popularityScore Int             @default(50)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  amenities       HotelAmenity[]
+  affiliateClicks AffiliateClick[]
+
+  @@index([city])
+  @@index([country])
+  @@index([pricePerNight])
+}
+
+model Amenity {
+  id     String         @id @default(uuid())
+  name   String         @unique
+  slug   String         @unique
+  hotels HotelAmenity[]
+}
+
+model HotelAmenity {
+  hotelId   String
+  amenityId String
+  hotel     Hotel   @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  amenity   Amenity @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+
+  @@id([hotelId, amenityId])
+}
+
+model AffiliateClick {
+  id        String   @id @default(uuid())
+  hotelId   String
+  sessionId String
+  source    String   @default("web")
+  clickedAt DateTime @default(now())
+  hotel     Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+
+  @@index([hotelId])
+  @@index([clickedAt])
+}
+
+model SearchEvent {
+  id          String   @id @default(uuid())
+  sessionId   String?
+  destination String
+  budget      Float?
+  purpose     String?
+  filters     Json     @default("{}")
+  resultCount Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model RecommendationEvent {
+  id          String   @id @default(uuid())
+  sessionId   String?
+  query       Json
+  resultCount Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+}

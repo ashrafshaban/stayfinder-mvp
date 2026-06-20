@@ -1,0 +1,3 @@
+name,city,country,description,stars,rating,pricePerNight,imageUrl,latitude,longitude,affiliateUrl,popularityScore,amenitySlugs
+Sample Cairo Hotel,Cairo,Egypt,A sample hotel for CSV import testing.,4,8.0,120,https://picsum.photos/seed/sample-cairo/800/600,30.0444,31.2357,https://booking.example/h/sample-cairo?ref=mvp,65,wifi|pool|restaurant
+Sample Dubai Hotel,Dubai,UAE,A sample hotel for CSV import testing.,5,9.1,350,https://picsum.photos/seed/sample-dubai/800/600,25.2048,55.2708,https://booking.example/h/sample-dubai?ref=mvp,80,spa|pool|gym|wifi
