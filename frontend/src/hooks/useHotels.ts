@@ -1,33 +1,47 @@
 import { useQuery } from "@tanstack/react-query";
-import { apiFetch, buildQueryString } from "../api/client";
+import { hotelApi } from "../api";
 import { useSessionId } from "./useSessionId";
-import { Hotel, PaginatedResponse, SearchParams } from "../types";
+import { SearchParams } from "../types";
 
 export function useAmenities() {
   return useQuery({
     queryKey: ["amenities"],
-    queryFn: () => apiFetch<{ id: string; name: string; slug: string }[]>("/api/amenities"),
+    queryFn: () => hotelApi.getAmenities(),
   });
 }
 
 export function useHotels(params: SearchParams) {
   const sessionId = useSessionId();
-  const queryString = buildQueryString({ ...params, sessionId });
 
   return useQuery({
     queryKey: ["hotels", params],
-    queryFn: () => apiFetch<PaginatedResponse<Hotel>>(`/api/hotels${queryString}`),
+    queryFn: () =>
+      hotelApi.listHotels({
+        ...params,
+        stars: params.minStars,
+        sessionId,
+      }),
     enabled: !!params.destination,
   });
 }
 
 export function useRecommendations(params: SearchParams) {
   const sessionId = useSessionId();
-  const queryString = buildQueryString({ ...params, sessionId });
 
   return useQuery({
     queryKey: ["recommendations", params],
-    queryFn: () => apiFetch<PaginatedResponse<Hotel>>(`/api/recommendations${queryString}`),
+    queryFn: () =>
+      hotelApi.getRecommendations({
+        destination: params.destination!,
+        budget: params.budget,
+        purpose: params.purpose,
+        stars: params.minStars,
+        minRating: params.minRating,
+        amenities: params.amenities,
+        page: params.page,
+        limit: params.limit,
+        sessionId,
+      }),
     enabled: !!params.destination,
   });
 }
@@ -35,14 +49,11 @@ export function useRecommendations(params: SearchParams) {
 export function useHotel(id: string) {
   return useQuery({
     queryKey: ["hotel", id],
-    queryFn: () => apiFetch<Hotel>(`/api/hotels/${id}`),
+    queryFn: () => hotelApi.getHotelById(id),
     enabled: !!id,
   });
 }
 
 export async function trackAffiliateClick(hotelId: string, sessionId: string) {
-  return apiFetch("/api/affiliate/click", {
-    method: "POST",
-    body: JSON.stringify({ hotelId, sessionId, source: "web" }),
-  });
+  return hotelApi.trackAffiliateClick({ hotelId, sessionId, source: "web" });
 }

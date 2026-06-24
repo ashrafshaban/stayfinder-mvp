@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Hotel } from "../types";
-import { formatPrice } from "../api/client";
+import { formatPrice } from "../utils/format";
 import { RecommendationBadge } from "./RecommendationBadge";
 import { StarRating } from "./StarRating";
 

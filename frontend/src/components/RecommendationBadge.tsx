@@ -1,4 +1,4 @@
-import { formatScore } from "../api/client";
+import { formatScore } from "../utils/format";
 
 interface RecommendationBadgeProps {
   score: number;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useHotel, trackAffiliateClick } from "../hooks/useHotels";
 import { getSessionId } from "../hooks/useSessionId";
-import { formatPrice } from "../api/client";
+import { formatPrice } from "../utils/format";
 import { StarRating } from "../components/StarRating";
 import { LoadingGrid } from "../components/LoadingGrid";
 
